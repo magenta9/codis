@@ -6,12 +6,12 @@ package topom
 import (
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/math2"
-	"github.com/CodisLabs/codis/pkg/utils/redis"
-	"github.com/CodisLabs/codis/pkg/utils/sync2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/utils/redis"
+	"github.com/magenta9/codis/pkg/utils/sync2"
 )
 
 func (s *Topom) AddSentinel(addr string) error {

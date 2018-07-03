@@ -8,8 +8,8 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/CodisLabs/codis/pkg/utils/bufio2"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/bufio2"
+	"github.com/magenta9/codis/pkg/utils/errors"
 )
 
 const (

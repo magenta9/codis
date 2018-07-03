@@ -16,14 +16,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/math2"
-	"github.com/CodisLabs/codis/pkg/utils/redis"
-	"github.com/CodisLabs/codis/pkg/utils/rpc"
-	"github.com/CodisLabs/codis/pkg/utils/unsafe2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/utils/redis"
+	"github.com/magenta9/codis/pkg/utils/rpc"
+	"github.com/magenta9/codis/pkg/utils/unsafe2"
 )
 
 type Proxy struct {

@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/CodisLabs/codis",
+	"ImportPath": "github.com/magenta9/codis",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [

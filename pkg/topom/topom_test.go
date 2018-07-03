@@ -8,11 +8,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/models/fs"
-	"github.com/CodisLabs/codis/pkg/proxy"
-	"github.com/CodisLabs/codis/pkg/utils/assert"
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/models/fs"
+	"github.com/magenta9/codis/pkg/proxy"
+	"github.com/magenta9/codis/pkg/utils/assert"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 var config = NewDefaultConfig()

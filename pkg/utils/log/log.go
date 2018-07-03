@@ -13,8 +13,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/trace"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/trace"
 )
 
 const (

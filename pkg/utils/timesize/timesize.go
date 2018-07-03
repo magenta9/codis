@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 type Duration time.Duration

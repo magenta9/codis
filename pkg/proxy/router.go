@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/redis"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/redis"
 )
 
 const MaxSlotNum = models.MaxSlotNum

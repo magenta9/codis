@@ -63,11 +63,11 @@ $ go env GOPATH
 
 #### 3. Download Codis Source Code
 
-The Codis source code needs to be downloaded to `$GOPATH/src/github.com/CodisLabs/codis`：
+The Codis source code needs to be downloaded to `$GOPATH/src/github.com/magenta9/codis`：
 
 ```bash
 $ mkdir -p $GOPATH/src/github.com/CodisLabs
-$ cd $_ && git clone https://github.com/CodisLabs/codis.git -b release3.2
+$ cd $_ && git clone https://github.com/magenta9/codis.git -b release3.2
 ```
 
 #### 4. Compile Codis Source Code
@@ -75,7 +75,7 @@ $ cd $_ && git clone https://github.com/CodisLabs/codis.git -b release3.2
 * use make tool to compile：
 
 ```bash
-$ cd $GOPATH/src/github.com/CodisLabs/codis
+$ cd $GOPATH/src/github.com/magenta9/codis
 $ make
 make -j -C extern/redis-3.2.8/
 ... ...
@@ -157,7 +157,7 @@ tail -100 ./log/codis-fe.log.2017-04-08
 ```
 2017/04/08 16:12:13 main.go:100: [WARN] set ncpu = 1
 2017/04/08 16:12:13 main.go:103: [WARN] set listen = 0.0.0.0:9090
-2017/04/08 16:12:13 main.go:115: [WARN] set assets = /home/codis/go/src/github.com/CodisLabs/codis/admin/../bin/assets
+2017/04/08 16:12:13 main.go:115: [WARN] set assets = /home/codis/go/src/github.com/magenta9/codis/admin/../bin/assets
 2017/04/08 16:12:13 main.go:153: [WARN] set --filesystem = /tmp/codis
 ```
 
@@ -204,8 +204,8 @@ ansible-playbook -i hosts site.yml
 
 Codis's proxy is stateless so you can run more than one proxies to get high availability and horizontal scalability.
 
-For Java users, you can use a modified Jedis, [Jodis](https://github.com/CodisLabs/jodis). It will watch the ZooKeeper to get the real-time available proxies, then query via them using a round robin policy to balance load and detect proxy online and offline automatically.
-If asynchronous request is required, you can use [Nedis](https://github.com/CodisLabs/nedis) which is implemented based on Netty.
+For Java users, you can use a modified Jedis, [Jodis](https://github.com/magenta9/jodis). It will watch the ZooKeeper to get the real-time available proxies, then query via them using a round robin policy to balance load and detect proxy online and offline automatically.
+If asynchronous request is required, you can use [Nedis](https://github.com/magenta9/nedis) which is implemented based on Netty.
 
 Codis-server is stateful.Redis Sentinel provides high availability for Codis-Server.Codis uses it to check master and slave instances are working as expected and start a failover process where a slave is promoted to master, the other additional slaves are reconfigured to use the new master.
 

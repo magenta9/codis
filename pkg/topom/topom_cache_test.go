@@ -6,8 +6,8 @@ package topom
 import (
 	"testing"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils/assert"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils/assert"
 )
 
 func TestSlotsCache(x *testing.T) {

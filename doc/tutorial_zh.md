@@ -61,7 +61,7 @@ Codis 3.x 由以下组件组成：
 
 ## 0. 下载与编译
 
-### 下载[release binary](https://github.com/CodisLabs/codis/releases)文件安装
+### 下载[release binary](https://github.com/magenta9/codis/releases)文件安装
 如果是重要的生产环境使用，尽量不要选择alpha、rc版本。
 根据自己的部署平台，选择相应的文件下载即可。
 
@@ -89,11 +89,11 @@ $ go env GOPATH
 
 #### 3. 下载 Codis 源代码
 
-Codis 源代码需要下载到 `$GOPATH/src/github.com/CodisLabs/codis`：
+Codis 源代码需要下载到 `$GOPATH/src/github.com/magenta9/codis`：
 
 ```bash
 $ mkdir -p $GOPATH/src/github.com/CodisLabs
-$ cd $_ && git clone https://github.com/CodisLabs/codis.git -b release3.2
+$ cd $_ && git clone https://github.com/magenta9/codis.git -b release3.2
 ```
 
 #### 4. 编译 Codis 源代码
@@ -101,7 +101,7 @@ $ cd $_ && git clone https://github.com/CodisLabs/codis.git -b release3.2
 * 直接通过 make 进行编译，会看到如下输出：
 
 ```bash
-$ cd $GOPATH/src/github.com/CodisLabs/codis
+$ cd $GOPATH/src/github.com/magenta9/codis
 $ make
 make -j -C extern/redis-3.2.8/
 ... ...
@@ -182,7 +182,7 @@ tail -100 ./log/codis-fe.log.2017-04-08
 ```
 2017/04/08 16:12:13 main.go:100: [WARN] set ncpu = 1
 2017/04/08 16:12:13 main.go:103: [WARN] set listen = 0.0.0.0:9090
-2017/04/08 16:12:13 main.go:115: [WARN] set assets = /home/codis/go/src/github.com/CodisLabs/codis/admin/../bin/assets
+2017/04/08 16:12:13 main.go:115: [WARN] set assets = /home/codis/go/src/github.com/magenta9/codis/admin/../bin/assets
 2017/04/08 16:12:13 main.go:153: [WARN] set --filesystem = /tmp/codis
 ```
 
@@ -474,12 +474,12 @@ $ ./bin/codis-admin --dashboard=127.0.0.1:18080 --remove-proxy --addr=127.0.0.1:
 
 因为 codis-proxy 是无状态的，可以比较容易的搭多个实例，达到高可用性和横向扩展。
 
-对 Java 用户来说，可以使用基于 Jedis 的实现 [Jodis](https://github.com/CodisLabs/jodis) ，来实现 proxy 层的 HA：
+对 Java 用户来说，可以使用基于 Jedis 的实现 [Jodis](https://github.com/magenta9/jodis) ，来实现 proxy 层的 HA：
     
 + 它会通过监控 zookeeper 上的注册信息来实时获得当前可用的 proxy 列表，既可以保证高可用性；
 + 也可以通过轮流请求所有的proxy实现负载均衡。
 
-如果需要异步请求，可以使用我们基于Netty开发的 [Nedis](https://github.com/CodisLabs/nedis)。
+如果需要异步请求，可以使用我们基于Netty开发的 [Nedis](https://github.com/magenta9/nedis)。
 
 对下层的 redis 实例来说，当一个 group 的 master 挂掉的时候，应该让管理员清楚，并手动的操作，因为这涉及到了数据一致性等问题（redis的主从同步是最终一致性的）。因此 codis 不会自动的将某个 slave 升级成 master。关于外部 codis-ha 工具（具体可以参考之前的章节），这是一个通过 codis-dashboard 开放的 RESTful API 实现自动切换主从的工具。该工具会在检测到 master 挂掉的时候主动应用主从切换策略，提升单个 slave 成为新的 master。
 

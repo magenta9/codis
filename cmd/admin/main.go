@@ -6,7 +6,7 @@ package main
 import (
 	"github.com/docopt/docopt-go"
 
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 func main() {

@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/math2"
-	"github.com/CodisLabs/codis/pkg/utils/sync2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/utils/sync2"
 )
 
 func (s *Topom) ProcessSlotAction() error {

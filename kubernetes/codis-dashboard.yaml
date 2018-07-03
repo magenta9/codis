@@ -27,7 +27,7 @@ spec:
               command: [/bin/sh", "-c", "PID=$(cat log/dashboard.pid) && kill $PID && while ps -p 1 > /dev/null; do sleep 1; done"]
         env:
         - name: CODIS_PATH
-          value: "/gopath/src/github.com/CodisLabs/codis"
+          value: "/gopath/src/github.com/magenta9/codis"
         - name: POD_IP
           valueFrom:
             fieldRef:

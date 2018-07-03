@@ -23,12 +23,12 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/rpc"
-	"github.com/CodisLabs/codis/pkg/utils/sync2/atomic2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/rpc"
+	"github.com/magenta9/codis/pkg/utils/sync2/atomic2"
 )
 
 var roundTripper http.RoundTripper

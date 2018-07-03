@@ -9,11 +9,11 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/topom"
-	"github.com/CodisLabs/codis/pkg/utils"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/topom"
+	"github.com/magenta9/codis/pkg/utils"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/math2"
 )
 
 type cmdDashboard struct {

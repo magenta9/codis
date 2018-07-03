@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/CodisLabs/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/errors"
 )
 
 func LookupIP(host string) []net.IP {

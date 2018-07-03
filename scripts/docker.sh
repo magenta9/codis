@@ -56,7 +56,7 @@ fe)
          -v `realpath log`:/codis/log \
          -p 8080:8080 \
      codis-image \
-     codis-fe -l log/fe.log --zookeeper ${hostip}:2181 --listen=0.0.0.0:8080 --assets=/gopath/src/github.com/CodisLabs/codis/bin/assets
+     codis-fe -l log/fe.log --zookeeper ${hostip}:2181 --listen=0.0.0.0:8080 --assets=/gopath/src/github.com/magenta9/codis/bin/assets
     ;;
 
 cleanup)

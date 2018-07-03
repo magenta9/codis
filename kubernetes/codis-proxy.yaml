@@ -23,7 +23,7 @@ spec:
               command: ["/bin/sh", "-c", "codis-admin --dashboard=${DASHBOARD_ADDR} --remove-proxy --addr=${POD_IP}:11080 1>/dev/null 2>&1"]
         env:
         - name: CODIS_PATH
-          value: "/gopath/src/github.com/CodisLabs/codis"
+          value: "/gopath/src/github.com/magenta9/codis"
         - name: POD_IP
           valueFrom:
             fieldRef:

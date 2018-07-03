@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/CodisLabs/codis/pkg/utils/trace"
+	"github.com/magenta9/codis/pkg/utils/trace"
 )
 
 var TraceEnabled = true

@@ -6,7 +6,7 @@ package utils
 import (
 	"strconv"
 
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 func Argument(d map[string]interface{}, name string) (string, bool) {

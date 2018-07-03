@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/CodisLabs/codis/pkg/utils/assert"
+	"github.com/magenta9/codis/pkg/utils/assert"
 )
 
 func newReader(n int, input string) *Reader {

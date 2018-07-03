@@ -10,11 +10,11 @@ import (
 
 	"github.com/docopt/docopt-go"
 
-	"github.com/CodisLabs/codis/pkg/topom"
-	"github.com/CodisLabs/codis/pkg/utils"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/math2"
-	"github.com/CodisLabs/codis/pkg/utils/redis"
+	"github.com/magenta9/codis/pkg/topom"
+	"github.com/magenta9/codis/pkg/utils"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/utils/redis"
 )
 
 func main() {

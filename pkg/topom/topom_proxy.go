@@ -4,11 +4,11 @@
 package topom
 
 import (
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/proxy"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
-	"github.com/CodisLabs/codis/pkg/utils/log"
-	"github.com/CodisLabs/codis/pkg/utils/sync2"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/proxy"
+	"github.com/magenta9/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/utils/sync2"
 )
 
 func (s *Topom) CreateProxy(addr string) error {

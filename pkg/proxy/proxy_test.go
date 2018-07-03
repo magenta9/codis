@@ -6,9 +6,9 @@ package proxy
 import (
 	"testing"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/utils/assert"
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/utils/assert"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 var config = newProxyConfig()

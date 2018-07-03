@@ -6,7 +6,7 @@ package proxy
 import (
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/utils/math2"
+	"github.com/magenta9/codis/pkg/utils/math2"
 )
 
 type Delay interface {

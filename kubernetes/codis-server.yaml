@@ -53,7 +53,7 @@ spec:
         - name: SERVER_REPLICA
           value: "2"
         - name: CODIS_PATH
-          value: "/gopath/src/github.com/CodisLabs/codis"
+          value: "/gopath/src/github.com/magenta9/codis"
         - name: POD_IP
           valueFrom:
             fieldRef:

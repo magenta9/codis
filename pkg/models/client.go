@@ -6,10 +6,10 @@ package models
 import (
 	"time"
 
-	"github.com/CodisLabs/codis/pkg/models/etcd"
-	"github.com/CodisLabs/codis/pkg/models/fs"
-	"github.com/CodisLabs/codis/pkg/models/zk"
-	"github.com/CodisLabs/codis/pkg/utils/errors"
+	"github.com/magenta9/codis/pkg/models/etcd"
+	"github.com/magenta9/codis/pkg/models/fs"
+	"github.com/magenta9/codis/pkg/models/zk"
+	"github.com/magenta9/codis/pkg/utils/errors"
 )
 
 type Client interface {

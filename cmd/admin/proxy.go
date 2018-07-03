@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/CodisLabs/codis/pkg/models"
-	"github.com/CodisLabs/codis/pkg/proxy"
-	"github.com/CodisLabs/codis/pkg/utils"
-	"github.com/CodisLabs/codis/pkg/utils/log"
+	"github.com/magenta9/codis/pkg/models"
+	"github.com/magenta9/codis/pkg/proxy"
+	"github.com/magenta9/codis/pkg/utils"
+	"github.com/magenta9/codis/pkg/utils/log"
 )
 
 type cmdProxy struct {
