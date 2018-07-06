@@ -2,35 +2,35 @@
 
 export GO15VENDOREXPERIMENT=1
 
-build-all: codis-server codis-dashboard codis-proxy codis-admin codis-ha codis-fe clean-gotest
+build-all: dbserver dashboard proxy codis-admin codis-ha fe clean-gotest
 
 codis-deps:
 	@mkdir -p bin config && bash version
 	@make --no-print-directory -C vendor/github.com/spinlock/jemalloc-go/
 
-codis-dashboard: codis-deps
-	go build -i -o bin/codis-dashboard ./cmd/dashboard
-	@./bin/codis-dashboard --default-config > config/dashboard.toml
+dashboard: codis-deps
+	go build -i -o bin/dashboard ./cmd/dashboard
+	@./bin/dashboard --default-config > config/dashboard.toml
 
-codis-proxy: codis-deps
-	go build -i -tags "cgo_jemalloc" -o bin/codis-proxy ./cmd/proxy
-	@./bin/codis-proxy --default-config > config/proxy.toml
+proxy: codis-deps
+	go build -i -tags "cgo_jemalloc" -o bin/proxy ./cmd/proxy
+	@./bin/proxy --default-config > config/proxy.toml
 
 codis-admin: codis-deps
-	go build -i -o bin/codis-admin ./cmd/admin
+	go build -i -o bin/config ./cmd/admin
 
 codis-ha: codis-deps
-	go build -i -o bin/codis-ha ./cmd/ha
+	go build -i -o bin/haservice ./cmd/ha
 
-codis-fe: codis-deps
-	go build -i -o bin/codis-fe ./cmd/fe
+fe: codis-deps
+	go build -i -o bin/fe ./cmd/fe
 	@rm -rf bin/assets; cp -rf cmd/fe/assets bin/
 
-codis-server:
+dbserver:
 	@mkdir -p bin
-	@rm -f bin/codis-server*
+	@rm -f bin/dbserver*
 	make -j4 -C extern/redis-3.2.11/
-	@cp -f extern/redis-3.2.11/src/redis-server  bin/codis-server
+	@cp -f extern/redis-3.2.11/src/redis-server  bin/dbserver
 	@cp -f extern/redis-3.2.11/src/redis-benchmark bin/
 	@cp -f extern/redis-3.2.11/src/redis-cli bin/
 	@cp -f extern/redis-3.2.11/src/redis-sentinel bin/
