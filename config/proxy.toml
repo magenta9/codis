@@ -32,8 +32,8 @@ proxy_addr = "0.0.0.0:9001"
 #          /zk/codis/db_{PRODUCT_NAME}/proxy-{HASHID} (compatible with Codis2.0)
 #        or else
 #          /jodis/{PRODUCT_NAME}/proxy-{HASHID}
-jodis_name = ""
-jodis_addr = ""
+jodis_name = "zookeeper"
+jodis_addr = "10.150.28.20:2181"
 jodis_auth = ""
 jodis_timeout = "20s"
 jodis_compatible = false
