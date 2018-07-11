@@ -283,12 +283,12 @@ Groups:
 			// remove codis server(slave and only one master) which state is not right
 			switch hc.sstatus[x.Addr] {
 			case CodeError, CodeMissing, CodeTimeout, CodeSyncError:
-				log.Warnf("try to group-del-server to dashboard %s", x.Addr)
+				log.Warnf("try to db-del-server to dashboard %s", x.Addr)
 				if err := client.GroupDelServer(g.Id, x.Addr); err != nil {
-					log.ErrorErrorf(err, "call rpc group-del-server to dashboard %s failed", x.Addr)
+					log.ErrorErrorf(err, "call rpc db-del-server to dashboard %s failed", x.Addr)
 					return
 				}
-				log.Debugf("call rpc group-del-server OK")
+				log.Debugf("call rpc db-del-server OK")
 
 				// trt to shutdown codis-server as slave in error state
 				log.Warnf("try to shutdown codis-server(slave) %s", x.Addr)

@@ -21,7 +21,7 @@ type cmdDashboard struct {
 }
 
 func (t *cmdDashboard) Main(d map[string]interface{}) {
-	t.addr = utils.ArgumentMust(d, "--dashboard")
+	t.addr = utils.ArgumentMust(d, "--coor")
 
 	switch {
 
@@ -40,7 +40,9 @@ func (t *cmdDashboard) Main(d map[string]interface{}) {
 	case d["--slots-status"].(bool):
 		t.handleSlotsCommand(d)
 
-	case d["--create-proxy"].(bool):
+	case d["--proxy-add"].(bool):
+		fallthrough
+	case d["--proxy-remove"].(bool):
 		fallthrough
 	case d["--online-proxy"].(bool):
 		fallthrough
@@ -57,11 +59,11 @@ func (t *cmdDashboard) Main(d map[string]interface{}) {
 		fallthrough
 	case d["--resync-group"].(bool):
 		fallthrough
-	case d["--group-add"].(bool):
+	case d["--db-add"].(bool):
 		fallthrough
-	case d["--group-del"].(bool):
+	case d["--db-del"].(bool):
 		fallthrough
-	case d["--group-status"].(bool):
+	case d["--db-status"].(bool):
 		fallthrough
 	case d["--replica-groups"].(bool):
 		fallthrough
@@ -78,6 +80,12 @@ func (t *cmdDashboard) Main(d map[string]interface{}) {
 	case d["--sync-action"].(bool):
 		t.handleSyncActionCommand(d)
 
+	case d["--slot-add"].(bool):
+		fallthrough
+	case d["--slot-remove"].(bool):
+		fallthrough
+	case d["--slot-migrate"].(bool):
+		fallthrough
 	case d["--slot-action"].(bool):
 		t.handleSlotActionCommand(d)
 
@@ -90,18 +98,18 @@ func (t *cmdDashboard) Main(d map[string]interface{}) {
 func (t *cmdDashboard) newTopomClient() *topom.ApiClient {
 	c := topom.NewApiClient(t.addr)
 
-	log.Debugf("call rpc model to dashboard %s", t.addr)
+	log.Debugf("call rpc model to coor %s", t.addr)
 	p, err := c.Model()
 	if err != nil {
-		log.PanicErrorf(err, "call rpc model to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc model to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc model OK")
 
 	c.SetXAuth(p.ProductName)
 
-	log.Debugf("call rpc xping to dashboard %s", t.addr)
+	log.Debugf("call rpc xping to coor %s", t.addr)
 	if err := c.XPing(); err != nil {
-		log.PanicErrorf(err, "call rpc xping to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc xping to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc xping OK")
 
@@ -111,15 +119,15 @@ func (t *cmdDashboard) newTopomClient() *topom.ApiClient {
 func (t *cmdDashboard) handleOverview(d map[string]interface{}) {
 	c := t.newTopomClient()
 
-	log.Debugf("call rpc overview to dashboard %s", t.addr)
+	log.Debugf("call rpc overview to coor %s", t.addr)
 	o, err := c.Overview()
 	if err != nil {
-		log.PanicErrorf(err, "call rpc overview to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc overview to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc overview OK")
 
 	var cmd string
-	for _, s := range []string{"config", "model", "slots", "stats", "group", "proxy", "--list-group", "--list-proxy"} {
+	for _, s := range []string{"config", "model", "slots", "stats", "group", "proxy", "--db-list", "--proxy-list"} {
 		if d[s].(bool) {
 			cmd = s
 		}
@@ -143,15 +151,15 @@ func (t *cmdDashboard) handleOverview(d map[string]interface{}) {
 		if o.Stats != nil {
 			obj = o.Stats.Group
 		}
-	case "--list-group":
+	case "--db-list":
 		if o.Stats != nil {
 			obj = o.Stats.Group.Models
 		}
-	case "proxy":
+	case "dbserver":
 		if o.Stats != nil {
 			obj = o.Stats.Proxy
 		}
-	case "--list-proxy":
+	case "--proxy-list":
 		if o.Stats != nil {
 			obj = o.Stats.Proxy.Models
 		}
@@ -174,9 +182,9 @@ func (t *cmdDashboard) handleLogLevel(d map[string]interface{}) {
 		log.Panicf("option --log-level = %s", s)
 	}
 
-	log.Debugf("call rpc loglevel to dashboard %s", t.addr)
+	log.Debugf("call rpc loglevel to coor %s", t.addr)
 	if err := c.LogLevel(v); err != nil {
-		log.PanicErrorf(err, "call rpc loglevel to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc loglevel to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc loglevel OK")
 }
@@ -184,9 +192,9 @@ func (t *cmdDashboard) handleLogLevel(d map[string]interface{}) {
 func (t *cmdDashboard) handleShutdown(d map[string]interface{}) {
 	c := t.newTopomClient()
 
-	log.Debugf("call rpc shutdown to dashboard %s", t.addr)
+	log.Debugf("call rpc shutdown to coor %s", t.addr)
 	if err := c.Shutdown(); err != nil {
-		log.PanicErrorf(err, "call rpc shutdown to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc shutdown to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc shutdown OK")
 }
@@ -194,9 +202,9 @@ func (t *cmdDashboard) handleShutdown(d map[string]interface{}) {
 func (t *cmdDashboard) handleReload(d map[string]interface{}) {
 	c := t.newTopomClient()
 
-	log.Debugf("call rpc reload to dashboard %s", t.addr)
+	log.Debugf("call rpc reload to coor %s", t.addr)
 	if err := c.Reload(); err != nil {
-		log.PanicErrorf(err, "call rpc reload to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc reload to coor %s failed", t.addr)
 	}
 	log.Debugf("call rpc reload OK")
 }
@@ -208,10 +216,10 @@ func (t *cmdDashboard) handleSlotsCommand(d map[string]interface{}) {
 
 	case d["--slots-status"].(bool):
 
-		log.Debugf("call rpc slots to dashboard %s", t.addr)
+		log.Debugf("call rpc slots to coor %s", t.addr)
 		o, err := c.Slots()
 		if err != nil {
-			log.PanicErrorf(err, "call rpc slots to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc slots to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc slots OK")
 
@@ -242,9 +250,9 @@ func (t *cmdDashboard) handleSlotsCommand(d map[string]interface{}) {
 			return
 		}
 
-		log.Debugf("call rpc slots-assign to dashboard %s", t.addr)
+		log.Debugf("call rpc slots-assign to coor %s", t.addr)
 		if err := c.SlotsAssignOffline(slots); err != nil {
-			log.PanicErrorf(err, "call rpc slots-assign to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc slots-assign to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc slots-assign OK")
 
@@ -270,9 +278,9 @@ func (t *cmdDashboard) handleSlotsCommand(d map[string]interface{}) {
 			return
 		}
 
-		log.Debugf("call rpc slots-assign to dashboard %s", t.addr)
+		log.Debugf("call rpc slots-assign to coor %s", t.addr)
 		if err := c.SlotsAssignGroup(slots); err != nil {
-			log.PanicErrorf(err, "call rpc slots-assign to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc slots-assign to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc slots-assign OK")
 
@@ -298,10 +306,10 @@ func (t *cmdDashboard) parseProxyTokens(d map[string]interface{}) []string {
 
 		c := t.newTopomClient()
 
-		log.Debugf("call rpc stats to dashboard %s", t.addr)
+		log.Debugf("call rpc stats to coor %s", t.addr)
 		s, err := c.Stats()
 		if err != nil {
-			log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc stats OK")
 
@@ -328,10 +336,10 @@ func (t *cmdDashboard) parseProxyTokens(d map[string]interface{}) []string {
 
 		c := t.newTopomClient()
 
-		log.Debugf("call rpc stats to dashboard %s", t.addr)
+		log.Debugf("call rpc stats to coor %s", t.addr)
 		s, err := c.Stats()
 		if err != nil {
-			log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc stats OK")
 
@@ -360,36 +368,36 @@ func (t *cmdDashboard) handleProxyCommand(d map[string]interface{}) {
 
 	switch {
 
-	case d["--create-proxy"].(bool):
+	case d["--proxy-add"].(bool):
 
 		addr := utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc create-proxy to dashboard %s", t.addr)
+		log.Debugf("call rpc proxy-add to coor %s", t.addr)
 		if err := c.CreateProxy(addr); err != nil {
-			log.PanicErrorf(err, "call rpc create-proxy to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc proxy-add to coor %s failed", t.addr)
 		}
-		log.Debugf("call rpc create-proxy OK")
+		log.Debugf("call rpc proxy-add OK")
 
 	case d["--online-proxy"].(bool):
 
 		addr := utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc online-proxy to dashboard %s", t.addr)
+		log.Debugf("call rpc online-proxy to coor %s", t.addr)
 		if err := c.OnlineProxy(addr); err != nil {
-			log.PanicErrorf(err, "call rpc online-proxy to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc online-proxy to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc online-proxy OK")
 
-	case d["--remove-proxy"].(bool):
+	case d["--proxy-remove"].(bool):
 
 		force := d["--force"].(bool)
 
 		for _, token := range t.parseProxyTokens(d) {
-			log.Debugf("call rpc remove-proxy to dashboard %s", t.addr)
+			log.Debugf("call rpc proxy-remove to coor %s", t.addr)
 			if err := c.RemoveProxy(token, force); err != nil {
-				log.PanicErrorf(err, "call rpc remove-proxy to dashboard %s failed", t.addr)
+				log.PanicErrorf(err, "call rpc proxy-remove to coor %s failed", t.addr)
 			}
-			log.Debugf("call rpc remove-proxy OK")
+			log.Debugf("call rpc proxy-remove OK")
 		}
 
 	case d["--reinit-proxy"].(bool):
@@ -399,27 +407,27 @@ func (t *cmdDashboard) handleProxyCommand(d map[string]interface{}) {
 		default:
 
 			for _, token := range t.parseProxyTokens(d) {
-				log.Debugf("call rpc reinit-proxy to dashboard %s", t.addr)
+				log.Debugf("call rpc reinit-proxy to coor %s", t.addr)
 				if err := c.ReinitProxy(token); err != nil {
-					log.PanicErrorf(err, "call rpc reinit-proxy to dashboard %s failed", t.addr)
+					log.PanicErrorf(err, "call rpc reinit-proxy to coor %s failed", t.addr)
 				}
 				log.Debugf("call rpc reinit-proxy OK")
 			}
 
 		case d["--all"].(bool):
 
-			log.Debugf("call rpc stats to dashboard %s", t.addr)
+			log.Debugf("call rpc stats to coor %s", t.addr)
 			s, err := c.Stats()
 			if err != nil {
-				log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+				log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 			}
 			log.Debugf("call rpc stats OK")
 
 			for _, p := range s.Proxy.Models {
 				fmt.Printf("reinit proxy: %s\n", p.Encode())
-				log.Debugf("call rpc reinit-proxy to dashboard %s", t.addr)
+				log.Debugf("call rpc reinit-proxy to coor %s", t.addr)
 				if err := c.ReinitProxy(p.Token); err != nil {
-					log.PanicErrorf(err, "call rpc reinit-proxy to dashboard %s failed", t.addr)
+					log.PanicErrorf(err, "call rpc reinit-proxy to coor %s failed", t.addr)
 				}
 				log.Debugf("call rpc reinit-proxy OK")
 			}
@@ -428,10 +436,10 @@ func (t *cmdDashboard) handleProxyCommand(d map[string]interface{}) {
 
 	case d["--proxy-status"].(bool):
 
-		log.Debugf("call rpc stats to dashboard %s", t.addr)
+		log.Debugf("call rpc stats to coor %s", t.addr)
 		s, err := c.Stats()
 		if err != nil {
-			log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc stats OK")
 
@@ -477,9 +485,9 @@ func (t *cmdDashboard) handleGroupCommand(d map[string]interface{}) {
 
 		gid := utils.ArgumentIntegerMust(d, "--gid")
 
-		log.Debugf("call rpc create-group to dashboard %s", t.addr)
+		log.Debugf("call rpc create-group to coor %s", t.addr)
 		if err := c.CreateGroup(gid); err != nil {
-			log.PanicErrorf(err, "call rpc create-group to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc create-group to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc create-group OK")
 
@@ -487,9 +495,9 @@ func (t *cmdDashboard) handleGroupCommand(d map[string]interface{}) {
 
 		gid := utils.ArgumentIntegerMust(d, "--gid")
 
-		log.Debugf("call rpc remove-group to dashboard %s", t.addr)
+		log.Debugf("call rpc remove-group to coor %s", t.addr)
 		if err := c.RemoveGroup(gid); err != nil {
-			log.PanicErrorf(err, "call rpc remove-group to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc remove-group to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc remove-group OK")
 
@@ -501,14 +509,14 @@ func (t *cmdDashboard) handleGroupCommand(d map[string]interface{}) {
 
 			stats, err := c.Stats()
 			if err != nil {
-				log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+				log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 			}
 			log.Debugf("call rpc stats OK")
 
 			for _, g := range stats.Group.Models {
-				log.Debugf("call rpc resync-group [%d] to dashboard %s", g.Id, t.addr)
+				log.Debugf("call rpc resync-group [%d] to coor %s", g.Id, t.addr)
 				if err := c.ResyncGroup(g.Id); err != nil {
-					log.PanicErrorf(err, "call rpc resync-group to dashboard %s failed", t.addr)
+					log.PanicErrorf(err, "call rpc resync-group to coor %s failed", t.addr)
 				}
 			}
 			log.Debugf("call rpc resync-group OK")
@@ -517,64 +525,64 @@ func (t *cmdDashboard) handleGroupCommand(d map[string]interface{}) {
 
 			gid := utils.ArgumentIntegerMust(d, "--gid")
 
-			log.Debugf("call rpc resync-group to dashboard %s", t.addr)
+			log.Debugf("call rpc resync-group to coor %s", t.addr)
 			if err := c.ResyncGroup(gid); err != nil {
-				log.PanicErrorf(err, "call rpc resync-group to dashboard %s failed", t.addr)
+				log.PanicErrorf(err, "call rpc resync-group to coor %s failed", t.addr)
 			}
 			log.Debugf("call rpc resync-group OK")
 
 		}
 
-	case d["--group-add"].(bool):
+	case d["--db-add"].(bool):
 
-		gid, addr := utils.ArgumentIntegerMust(d, "--gid"), utils.ArgumentMust(d, "--addr")
+		gid, addr := utils.ArgumentIntegerMust(d, "--dbid"), utils.ArgumentMust(d, "--addr")
 		dc, _ := utils.Argument(d, "--datacenter")
 
-		log.Debugf("call rpc group-add-server to dashboard %s", t.addr)
+		log.Debugf("call rpc db-add-server to coor %s", t.addr)
 		if err := c.GroupAddServer(gid, dc, addr); err != nil {
-			log.PanicErrorf(err, "call rpc group-add-server to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc db-add-server to coor %s failed", t.addr)
 		}
-		log.Debugf("call rpc group-add-server OK")
+		log.Debugf("call rpc db-add-server OK")
 
-	case d["--group-del"].(bool):
+	case d["--db-del"].(bool):
 
-		gid, addr := utils.ArgumentIntegerMust(d, "--gid"), utils.ArgumentMust(d, "--addr")
+		gid, addr := utils.ArgumentIntegerMust(d, "--dbid"), utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc group-del-server to dashboard %s", t.addr)
+		log.Debugf("call rpc db-del-server to coor %s", t.addr)
 		if err := c.GroupDelServer(gid, addr); err != nil {
-			log.PanicErrorf(err, "call rpc group-del-server to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc db-del-server to coor %s failed", t.addr)
 		}
-		log.Debugf("call rpc group-del-server OK")
+		log.Debugf("call rpc db-del-server OK")
 
 	case d["--replica-groups"].(bool):
 
 		gid, addr := utils.ArgumentIntegerMust(d, "--gid"), utils.ArgumentMust(d, "--addr")
 		value := d["--enable"].(bool)
 
-		log.Debugf("call rpc replica-groups to dashboard %s", t.addr)
+		log.Debugf("call rpc replica-groups to coor %s", t.addr)
 		if err := c.EnableReplicaGroups(gid, addr, value); err != nil {
-			log.PanicErrorf(err, "call rpc replica-groups to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc replica-groups to coor %s failed", t.addr)
 		}
-		log.Debugf("call rpc replica-groups to dashboard OK")
+		log.Debugf("call rpc replica-groups to coor OK")
 
 	case d["--promote-server"].(bool):
 
 		gid, addr := utils.ArgumentIntegerMust(d, "--gid"), utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc group-promote-server to dashboard %s", t.addr)
+		log.Debugf("call rpc group-promote-server to coor %s", t.addr)
 		if err := c.GroupPromoteServer(gid, addr); err != nil {
-			log.PanicErrorf(err, "call rpc group-promote-server to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc group-promote-server to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc group-promote-server OK")
 
 		fallthrough
 
-	case d["--group-status"].(bool):
+	case d["--db-status"].(bool):
 
-		log.Debugf("call rpc stats to dashboard %s", t.addr)
+		log.Debugf("call rpc stats to coor %s", t.addr)
 		s, err := c.Stats()
 		if err != nil {
-			log.PanicErrorf(err, "call rpc stats to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc stats to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc stats OK")
 
@@ -586,7 +594,7 @@ func (t *cmdDashboard) handleGroupCommand(d map[string]interface{}) {
 				widx = math2.MaxInt(widx, len(strconv.Itoa(i)))
 			}
 		}
-		format += fmt.Sprintf("group-%%0%dd [%%0%dd]", wgid, widx)
+		format += fmt.Sprintf("db-%%0%dd [%%0%dd]", wgid, widx)
 
 		var waddr int
 		for _, g := range s.Group.Models {
@@ -641,9 +649,9 @@ func (t *cmdDashboard) handleSentinelCommand(d map[string]interface{}) {
 
 		addr := utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc add-sentinel to dashboard %s", t.addr)
+		log.Debugf("call rpc add-sentinel to coor %s", t.addr)
 		if err := c.AddSentinel(addr); err != nil {
-			log.PanicErrorf(err, "call rpc add-sentinel to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc add-sentinel to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc add-sentinel OK")
 
@@ -653,17 +661,17 @@ func (t *cmdDashboard) handleSentinelCommand(d map[string]interface{}) {
 
 		force := d["--force"].(bool)
 
-		log.Debugf("call rpc del-sentinel to dashboard %s", t.addr)
+		log.Debugf("call rpc del-sentinel to coor %s", t.addr)
 		if err := c.DelSentinel(addr, force); err != nil {
-			log.PanicErrorf(err, "call rpc del-sentinel to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc del-sentinel to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc del-sentinel OK")
 
 	case d["--sentinel-resync"].(bool):
 
-		log.Debugf("call rpc resync-sentinels to dashboard %s", t.addr)
+		log.Debugf("call rpc resync-sentinels to coor %s", t.addr)
 		if err := c.ResyncSentinels(); err != nil {
-			log.PanicErrorf(err, "call rpc resync-sentinels to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc resync-sentinels to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc resync-sentinels OK")
 
@@ -679,9 +687,9 @@ func (t *cmdDashboard) handleSyncActionCommand(d map[string]interface{}) {
 
 		addr := utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc create-sync-action to dashboard %s", t.addr)
+		log.Debugf("call rpc create-sync-action to coor %s", t.addr)
 		if err := c.SyncCreateAction(addr); err != nil {
-			log.PanicErrorf(err, "call rpc create-sync-action to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc create-sync-action to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc create-sync-action OK")
 
@@ -689,9 +697,9 @@ func (t *cmdDashboard) handleSyncActionCommand(d map[string]interface{}) {
 
 		addr := utils.ArgumentMust(d, "--addr")
 
-		log.Debugf("call rpc remove-sync-action to dashboard %s", t.addr)
+		log.Debugf("call rpc remove-sync-action to coor %s", t.addr)
 		if err := c.SyncRemoveAction(addr); err != nil {
-			log.PanicErrorf(err, "call rpc remove-sync-action to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc remove-sync-action to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc remove-sync-action OK")
 
@@ -703,25 +711,47 @@ func (t *cmdDashboard) handleSlotActionCommand(d map[string]interface{}) {
 	c := t.newTopomClient()
 
 	switch {
+	case d["--slot-add"].(bool):
+
+		sid := utils.ArgumentIntegerMust(d, "--sid")
+		gid := utils.ArgumentIntegerMust(d, "--dbid")
+
+		log.Debugf("call rpc create-slot-add to coor %s", t.addr)
+		if err := c.SlotCreateAction(sid, gid); err != nil {
+			log.PanicErrorf(err, "call rpc create-slot-action to coor %s failed", t.addr)
+		}
+		log.Debugf("call rpc create-slot-action OK")
+
+	case d["--slot-migrate"].(bool):
+
+		beg := utils.ArgumentIntegerMust(d, "--beginid")
+		end := utils.ArgumentIntegerMust(d, "--endid")
+		gid := utils.ArgumentIntegerMust(d, "--dbid")
+
+		log.Debugf("call rpc slot-migrate to coor %s", t.addr)
+		if err := c.SlotCreateActionRange(beg, end, gid); err != nil {
+			log.PanicErrorf(err, "call rpc slot-migrate to coor %s failed", t.addr)
+		}
+		log.Debugf("call rpc slot-migrate OK")
 
 	case d["--create"].(bool):
 
 		sid := utils.ArgumentIntegerMust(d, "--sid")
 		gid := utils.ArgumentIntegerMust(d, "--gid")
 
-		log.Debugf("call rpc create-slot-action to dashboard %s", t.addr)
+		log.Debugf("call rpc create-slot-action to coor %s", t.addr)
 		if err := c.SlotCreateAction(sid, gid); err != nil {
-			log.PanicErrorf(err, "call rpc create-slot-action to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc create-slot-action to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc create-slot-action OK")
 
-	case d["--remove"].(bool):
+	case d["--slot-remove"].(bool):
 
 		sid := utils.ArgumentIntegerMust(d, "--sid")
 
-		log.Debugf("call rpc remove-slot-action to dashboard %s", t.addr)
+		log.Debugf("call rpc remove-slot-action to coor %s", t.addr)
 		if err := c.SlotRemoveAction(sid); err != nil {
-			log.PanicErrorf(err, "call rpc remove-slot-action to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc remove-slot-action to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc remove-slot-action OK")
 
@@ -731,9 +761,9 @@ func (t *cmdDashboard) handleSlotActionCommand(d map[string]interface{}) {
 		dst := utils.ArgumentIntegerMust(d, "--gid-to")
 		num := utils.ArgumentIntegerMust(d, "--num-slots")
 
-		log.Debugf("call rpc create-slot-action-some to dashboard %s", t.addr)
+		log.Debugf("call rpc create-slot-action-some to coor %s", t.addr)
 		if err := c.SlotCreateActionSome(src, dst, num); err != nil {
-			log.PanicErrorf(err, "call rpc create-slot-action-some to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc create-slot-action-some to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc create-slot-action-some OK")
 
@@ -743,9 +773,9 @@ func (t *cmdDashboard) handleSlotActionCommand(d map[string]interface{}) {
 		end := utils.ArgumentIntegerMust(d, "--end")
 		gid := utils.ArgumentIntegerMust(d, "--gid")
 
-		log.Debugf("call rpc create-slot-action-range to dashboard %s", t.addr)
+		log.Debugf("call rpc create-slot-action-range to coor %s", t.addr)
 		if err := c.SlotCreateActionRange(beg, end, gid); err != nil {
-			log.PanicErrorf(err, "call rpc create-slot-action-range to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc create-slot-action-range to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc create-slot-action-range OK")
 
@@ -753,9 +783,9 @@ func (t *cmdDashboard) handleSlotActionCommand(d map[string]interface{}) {
 
 		value := utils.ArgumentIntegerMust(d, "--interval")
 
-		log.Debugf("call rpc slot-action-interval to dashboard %s", t.addr)
+		log.Debugf("call rpc slot-action-interval to coor %s", t.addr)
 		if err := c.SetSlotActionInterval(value); err != nil {
-			log.PanicErrorf(err, "call rpc slot-action-interval to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc slot-action-interval to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc slot-action-interval OK")
 
@@ -763,9 +793,9 @@ func (t *cmdDashboard) handleSlotActionCommand(d map[string]interface{}) {
 
 		value := utils.ArgumentIntegerMust(d, "--disabled")
 
-		log.Debugf("call rpc slot-action-disabled to dashboard %s", t.addr)
+		log.Debugf("call rpc slot-action-disabled to coor %s", t.addr)
 		if err := c.SetSlotActionDisabled(value != 0); err != nil {
-			log.PanicErrorf(err, "call rpc slot-action-disabled to dashboard %s failed", t.addr)
+			log.PanicErrorf(err, "call rpc slot-action-disabled to coor %s failed", t.addr)
 		}
 		log.Debugf("call rpc slot-action-disabled OK")
 
@@ -777,12 +807,12 @@ func (t *cmdDashboard) handleSlotRebalance(d map[string]interface{}) {
 
 	confirm := d["--confirm"].(bool)
 
-	log.Debugf("call rpc slot-rebalance to dashboard %s", t.addr)
+	log.Debugf("call rpc rebalance to coor %s", t.addr)
 	plans, err := c.SlotsRebalance(confirm)
 	if err != nil {
-		log.PanicErrorf(err, "call rpc slot-rebalance to dashboard %s failed", t.addr)
+		log.PanicErrorf(err, "call rpc rebalance to coor %s failed", t.addr)
 	}
-	log.Debugf("call rpc slot-rebalance OK")
+	log.Debugf("call rpc rebalance OK")
 
 	if len(plans) == 0 {
 		fmt.Println("nothing changes")
