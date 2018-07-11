@@ -107,7 +107,7 @@ func (p *Proxy) startMetricsInfluxdb() {
 			"runtime_num_cgo_call":     stats.Runtime.NumCgoCall,
 			"runtime_num_mem_offheap":  stats.Runtime.MemOffheap,
 		}
-		p, err := influxdbClient.NewPoint("codis_usage", tags, fields, time.Now())
+		p, err := influxdbClient.NewPoint("cache_data", tags, fields, time.Now())
 		if err != nil {
 			return errors.Trace(err)
 		}
