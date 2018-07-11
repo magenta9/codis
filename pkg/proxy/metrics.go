@@ -92,20 +92,12 @@ func (p *Proxy) startMetricsInfluxdb() {
 			"hostname":     model.Hostname,
 		}
 		fields := map[string]interface{}{
-			"ops_total":                stats.Ops.Total,
-			"ops_fails":                stats.Ops.Fails,
-			"ops_redis_errors":         stats.Ops.Redis.Errors,
-			"ops_qps":                  stats.Ops.QPS,
-			"sessions_total":           stats.Sessions.Total,
-			"sessions_alive":           stats.Sessions.Alive,
-			"rusage_mem":               stats.Rusage.Mem,
-			"rusage_cpu":               stats.Rusage.CPU,
-			"runtime_gc_num":           stats.Runtime.GC.Num,
-			"runtime_gc_total_pausems": stats.Runtime.GC.TotalPauseMs,
-			"runtime_num_procs":        stats.Runtime.NumProcs,
-			"runtime_num_goroutines":   stats.Runtime.NumGoroutines,
-			"runtime_num_cgo_call":     stats.Runtime.NumCgoCall,
-			"runtime_num_mem_offheap":  stats.Runtime.MemOffheap,
+			"ops_qps":        stats.Ops.QPS,
+			"sessions_alive": stats.Sessions.Alive,
+			"usage_mem":      stats.Rusage.Mem,
+			"usage_cpu":      stats.Rusage.CPU,
+			"num_procs":      stats.Runtime.NumProcs,
+			"mem_heap":       stats.Runtime.MemOffheap,
 		}
 		p, err := influxdbClient.NewPoint("cache_data", tags, fields, time.Now())
 		if err != nil {
@@ -148,20 +140,12 @@ func (p *Proxy) startMetricsStatsd() {
 		}
 
 		fields := map[string]interface{}{
-			"ops_total":                stats.Ops.Total,
-			"ops_fails":                stats.Ops.Fails,
-			"ops_redis_errors":         stats.Ops.Redis.Errors,
-			"ops_qps":                  stats.Ops.QPS,
-			"sessions_total":           stats.Sessions.Total,
-			"sessions_alive":           stats.Sessions.Alive,
-			"rusage_mem":               stats.Rusage.Mem,
-			"rusage_cpu":               stats.Rusage.CPU,
-			"runtime_gc_num":           stats.Runtime.GC.Num,
-			"runtime_gc_total_pausems": stats.Runtime.GC.TotalPauseMs,
-			"runtime_num_procs":        stats.Runtime.NumProcs,
-			"runtime_num_goroutines":   stats.Runtime.NumGoroutines,
-			"runtime_num_cgo_call":     stats.Runtime.NumCgoCall,
-			"runtime_num_mem_offheap":  stats.Runtime.MemOffheap,
+			"ops_qps":                 stats.Ops.QPS,
+			"sessions_alive":          stats.Sessions.Alive,
+			"usage_mem":               stats.Rusage.Mem,
+			"usage_cpu":               stats.Rusage.CPU,
+			"runtime_num_procs":       stats.Runtime.NumProcs,
+			"runtime_num_mem_offheap": stats.Runtime.MemOffheap,
 		}
 		for key, value := range fields {
 			c.Gauge(strings.Join(append(segs, key), "."), value)
